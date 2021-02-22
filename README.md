@@ -41,10 +41,10 @@ The rutes in FreyaAPI are get methods and have four rutes.
         - format: csv,votable
         - amount: all,nearest
  Example:
-  http://localhost/get_data/lc_degree?catalogs=ztf&ra=139.33444972&dec=68.6350604&radius=0.0002777&format=csv&amount=all
+  http://localhost/get_data/lc_degree?catalogs&ra&dec&radius&format&amount
  
  Example:
-  http://localhost/get_data/lc_degree?catalogs=ztf&ra=139.33444972&dec=68.6350604&radius=0.0002777&format=votable&amount=nearest   
+  http://localhost/get_data/lc_degree?catalogs&ra&dec&radius&format&amount   
 ```
 ```
  # Get light curves of objects with area in hh:mm:ss.
@@ -54,8 +54,8 @@ The rutes in FreyaAPI are get methods and have four rutes.
         - format: csv,votable
         - amount: all,nearest
  Example:
-    http://localhost/get_data/lc_hms?catalogs=ztf&hms=%279h17m20.26793280000689s%20+4h34m32.414496000003936s%27&radius=0.0002777&format=csv&amount=all
+    http://localhost/get_data/lc_hms?catalogs=ztf&hms&radius&format&amount
  
  Example:
-   http://localhost/get_data/lc_hms_nearest?catalogs=ztf&hms=%279h17m20.26793280000689s%20+4h34m32.414496000003936s%27&radius=0.0002777&format=votable&amount=nearest 
+   http://localhost/get_data/lc_hms_nearest?catalogs&hmsradius&format&amount 
 ```

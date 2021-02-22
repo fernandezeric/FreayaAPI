@@ -7,7 +7,10 @@ from astropy.table import Table,vstack
 from astropy.io.votable import parse,parse_single_table, writeto
 
 import io
+import os
 import importlib
+
+from . import resources as r
 
 #
 from app import app
@@ -134,7 +137,13 @@ class GenericGet():
     
 # if select two or more catalogs the data (csv/table) using vstack to join in one table
 
- 
+@ns.route('/')
+class GetCatalogs(Resource):
+    def get(self):
+        dir_resources = r.__path__[0]
+        print(os.listdir(dir_resources))
+        return make_response(dir_resources)
+
 @ns.route('/lc_degree')
 class GetLcDegree(Resource):
     @api.expect(parser_degree)
