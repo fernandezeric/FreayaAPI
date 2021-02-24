@@ -1,5 +1,16 @@
-from flask import Flask
+from flask_restplus import Api
+from flask import Blueprint
 
-app = Flask(__name__)
+from .main.controller.user_controlller import api as ns
 
-from app import rutes
+blueprint = Blueprint('api', __name__)
+
+api =  Api(blueprint,
+             version='1.2', 
+             title='FreyaAPI',
+             description='FreyaAPI is the default API for use the Freya module for getting light curves data from diferent astronomical catalogs',
+             contact='',
+             license='',
+            )
+
+api.add_namespace(ns, path='/get_data')

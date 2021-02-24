@@ -5,3 +5,7 @@ Werkzeug==0.16.1
 requests==2.25.1
 Freya_alerce
 gunicorn
+flask_testing
+Flask-Script
+flask-bcrypt
+pyjwt

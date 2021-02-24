@@ -4,7 +4,7 @@ FreyaAPI's GitHub, need install Freya-alerce, look this github for more informat
 # New FreyaAPI
 Quick creation FreyaAPI used Freya's admin (freya-admin):
 ```
-# In any directory in your system
+# In any directory in your system type
 freya-admin --newapi
 
 ```
@@ -13,13 +13,21 @@ necessary routes generic that you only call and not modified, but first you need
 add resources(catalogs) with :
 
 ```
-# Inside folder FreyaAPI
+# Next need install the all modules to need for run FreyaAPI, run this command:
+pip install -r requirements.txt
+
+# Then inside folder FreyaAPI install the resource of Freya.
 
 freya-admin --addresource ztf
-freya-admin --addresource ztf_local
+freya-admin --addresource <name_resource>
 
 ```
-The catalogs add with --addresource need first add into Freya or module. 
+
+Finally run API with the manager included.
+```
+python manage.py run # run FreyaAPI
+python manage.py test # run test
+```
 
 ## Install with Docker (optional) 🔧
 When you use the command "freya-admin --newapi", you have inside in the new folder a
