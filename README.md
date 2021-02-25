@@ -65,5 +65,5 @@ The rutes in FreyaAPI are get methods and have four rutes.
     http://localhost/get_data/lc_hms?catalogs=ztf&hms&radius&format&amount
  
  Example:
-   http://localhost/get_data/lc_hms_nearest?catalogs&hmsradius&format&amount 
+   http://localhost/get_data/lc_hms_nearest?catalogs&hms&radius&format&amount 
 ```
