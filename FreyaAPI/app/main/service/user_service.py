@@ -44,13 +44,12 @@ class GenericGet():
             elif type_ == 1:
                 my_instance = my_class(hms=hms,radius=radius,format=format,nearest=get_).get_lc_hms()
 
-            # who read csv in astropy
+            # read csv in astropy
             if format == 'csv':
                 if first :
                     #try read data, if not exist continue
                     try: 
                         my_instance_ = ascii.read(my_instance)
-                        my_instance_.add_column(f'{catalog}',name='catalog')
                         results_ = my_instance_
                     except:
                         continue
@@ -59,7 +58,6 @@ class GenericGet():
                     #try read data, if not exist continue
                     try:
                         my_instance_ = ascii.read(my_instance)
-                        my_instance_.add_column(f'{catalog}',name='catalog')
                         results_ = vstack([results_,my_instance_])
                     except:
                         continue

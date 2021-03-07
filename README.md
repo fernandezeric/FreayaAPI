@@ -1,5 +1,5 @@
 # FreyaAPI Start (). 🚀
-FreyaAPI's GitHub, need install Freya-alerce, look this github for more information [Freya](https://github.com/fernandezeric/Memoria)
+FreyaAPI's GitHub, need install Freya-alerce, look this github for more information [Freya](https://github.com/fernandezeric/Memoria), inside can find a Demo.
 
 # New FreyaAPI
 Quick creation FreyaAPI used Freya's admin (freya-admin):
