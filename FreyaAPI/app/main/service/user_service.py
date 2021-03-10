@@ -1,11 +1,14 @@
 import importlib
 import io
 import os
+import pandas as pd
+import numpy as np
 from flask import make_response,abort
 
 from astropy.io import ascii
-from astropy.table import Table,vstack
-from astropy.io.votable import parse,parse_single_table, writeto
+from astropy.io.votable import parse,parse_single_table,from_table, writeto
+from astropy.io.votable.tree import VOTableFile, Resource, Table, Field
+from astropy.table import Table, Column
 
 from app.main import resources_freya as rf
 
@@ -40,51 +43,25 @@ class GenericGet():
             except:
                 continue
             if type_ == 0:
-                my_instance = my_class(ra=ra,dec=dec,radius=radius,format=format,nearest=get_).get_lc_deg()
+                my_instance = my_class(ra=ra,dec=dec,radius=radius,format='numpy',nearest=get_).get_lc_deg()
             elif type_ == 1:
-                my_instance = my_class(hms=hms,radius=radius,format=format,nearest=get_).get_lc_hms()
+                my_instance = my_class(hms=hms,radius=radius,format='numpy',nearest=get_).get_lc_hms()
 
-            # read csv in astropy
-            if format == 'csv':
-                if first :
-                    #try read data, if not exist continue
-                    try: 
-                        my_instance_ = ascii.read(my_instance)
-                        results_ = my_instance_
-                    except:
-                        continue
-                    first = False
-                else :
-                    #try read data, if not exist continue
-                    try:
-                        my_instance_ = ascii.read(my_instance)
-                        results_ = vstack([results_,my_instance_])
-                    except:
-                        continue
-            elif format == 'votable':
-                if first:
-                    try:
-                        votable = my_instance.encode(encoding='UTF-8')
-                        bio = io.BytesIO(votable)
-                        votable = parse(bio)
-                        table = parse_single_table(bio).to_table()
-                        results_ = table
-                    except:
-                        continue
-                    first = False
-                else :
-                    try:
-                        votable = my_instance.encode(encoding='UTF-8')
-                        bio = io.BytesIO(votable)
-                        votable = parse(bio)
-                        table = parse_single_table(bio).to_table()
-                        results_ = vstack([results_,table])
-                    except:
-                        continue
+            if first:
+                results_ = my_instance
+                first = False
+            else :
+                results_ = np.vstack((results_,my_instance))
+
         if format == 'csv':
             try:
+                df = pd.DataFrame({'obj':results_[:,0],'ra':results_[:,1],
+                    'dec':results_[:,2],'mjd':results_[:,3],
+                    'mag':results_[:,4],'magerr':results_[:,5],
+                    'filter':results_[:,6],'catalog':results_[:,7]})
                 buf = io.StringIO()
-                ascii.write(results_,buf,format='csv')
+                df.to_csv(buf,index=False)
+                
                 # make responde data with headers
                 data =  make_response(buf.getvalue())
                 data.headers["Content-Disposition"] = "attachment; filename=LightCurveData[{}].csv".format(args_['catalogs'])
@@ -94,8 +71,17 @@ class GenericGet():
                 return make_response('No light curve data find in catalog(s)')
         elif format == 'votable':
             try:
+                names_column = ['obj','ra','dec','mjd','mag','magerr','filter','catalog']
+                descriptions_column = ['Id of object in catalog the original catalog',
+                                        'Right ascension','Declination',
+                                        'Julian Day','Magnitude','Magnitude Error',
+                                        'Filter code','Original Catalog']
+
+                table_ = Table(rows=results_,names=names_column,descriptions=descriptions_column)                             
+                votable= VOTableFile.from_table(table_)
                 buf = io.BytesIO()
-                writeto(results_,buf)
+                writeto(votable,buf)
+                
                 # make responde data with headers
                 data = make_response(buf.getvalue().decode("utf-8"))
                 data.headers["Content-Disposition"] = "attachment; filename=LightCurveData[{}].xml".format(args_['catalogs'])

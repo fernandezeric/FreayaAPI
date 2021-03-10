@@ -3,6 +3,8 @@ astropy==4.2
 flask-restplus==0.13.0
 Werkzeug==0.16.1
 requests==2.25.1
+pandas
+numpy
 Freya_alerce
 gunicorn
 flask_testing
