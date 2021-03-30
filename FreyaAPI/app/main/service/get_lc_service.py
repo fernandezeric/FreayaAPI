@@ -4,13 +4,8 @@ import os
 import pandas as pd
 import numpy as np
 from flask import make_response,abort
-
-from astropy.io import ascii
-from astropy.io.votable import parse,parse_single_table,from_table, writeto
-from astropy.io.votable.tree import VOTableFile, Resource, Table, Field
-from astropy.table import Table, Column
-
 from app.main import resources_freya as rf
+from Freya_alerce.catalogs.core.format_lc import FormatLC
 
 
 class GenericGet():
@@ -55,35 +50,21 @@ class GenericGet():
 
         if format == 'csv':
             try:
-                df = pd.DataFrame({'obj':results_[:,0],'ra':results_[:,1],
-                    'dec':results_[:,2],'mjd':results_[:,3],
-                    'mag':results_[:,4],'magerr':results_[:,5],
-                    'filter':results_[:,6],'catalog':results_[:,7]})
-                buf = io.StringIO()
-                df.to_csv(buf,index=False)
-                
-                # make responde data with headers
-                data =  make_response(buf.getvalue())
+                # format return
+                format_ = FormatLC(results_).format_csv()
+                # make responde with headers
+                data =  make_response(format_)
                 data.headers["Content-Disposition"] = "attachment; filename=LightCurveData[{}].csv".format(args_['catalogs'])
                 data.headers["Content-type"] = "text/csv"
                 return data
             except:
-                return make_response('No light curve data find in catalog(s)')
+               return make_response('No light curve data find in catalog(s)')
         elif format == 'votable':
             try:
-                names_column = ['obj','ra','dec','mjd','mag','magerr','filter','catalog']
-                descriptions_column = ['Id of object in catalog the original catalog',
-                                        'Right ascension','Declination',
-                                        'Julian Day','Magnitude','Magnitude Error',
-                                        'Filter code','Original Catalog']
-
-                table_ = Table(rows=results_,names=names_column,descriptions=descriptions_column)                             
-                votable= VOTableFile.from_table(table_)
-                buf = io.BytesIO()
-                writeto(votable,buf)
-                
-                # make responde data with headers
-                data = make_response(buf.getvalue().decode("utf-8"))
+                # format return
+                format_ = FormatLC(results_).format_votable()
+                # make responde with headers
+                data = make_response(format_)
                 data.headers["Content-Disposition"] = "attachment; filename=LightCurveData[{}].xml".format(args_['catalogs'])
                 data.headers["Content-type"] = "text/xml"
                 return data

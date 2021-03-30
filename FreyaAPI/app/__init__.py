@@ -1,7 +1,7 @@
 from flask_restplus import Api
 from flask import Blueprint
 
-from .main.controller.user_controlller import api as ns
+from .main.controller.get_lc_controller import api as ns
 
 blueprint = Blueprint('api', __name__)
 

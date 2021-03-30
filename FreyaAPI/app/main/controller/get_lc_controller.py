@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import Base
-from ..service.user_service import GenericGet
+from ..service.get_lc_service import GenericGet
 
 api = Base.api
 _gdata = Base
